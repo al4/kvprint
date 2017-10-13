@@ -13,6 +13,8 @@ with open(path.join(here, 'README.rst'), encoding='utf-8') as f:
     long_description = f.read()
 
 
+test_requirements = ['pytest']
+
 setup(
     name='kvprint',
     use_scm_version=True,
@@ -28,9 +30,12 @@ setup(
         exclude=['contrib', 'docs', 'tests', 'build', 'cert']
     ),
     package_dir={'': 'src'},
-    install_requires=[],
+    install_requires=[
+        'six',
+    ],
     extras_require={
-        'test': ['pytest'],
+        'test': test_requirements,
     },
+    tests_require=test_requirements,
     zip_safe=True,
 )

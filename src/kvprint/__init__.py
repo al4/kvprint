@@ -18,7 +18,11 @@ def kvalign(data, max_width=None):
     """ Return a list of lines, with the keys left-padded to the length of
     the longest key or max_width, whichever is shorter.
     """
-    longest_key = max([len(k) for k in data.keys()])
+    try:
+        longest_key = max([len(k) for k in data.keys()])
+    except ValueError:
+        logger.debug("Could not determine longest key length, probably empty")
+        return []
     logger.debug('longest_key: {}'.format(longest_key))
 
     if max_width:
@@ -37,13 +41,30 @@ def kvalign(data, max_width=None):
     return lines
 
 
+def kvstring(data, separator=': ', width=None):
+    """ Return a string of key values aligned by separator
+
+    :param data:
+    :param separator:
+    :param width:
+    :return:
+    """
+    s = ""
+    for l in kvalign(data, max_width=width):
+        s += separator.join([str(v) for v in l])
+        s += '\n'
+
+
 def kvprint(data, separator=': ', width=None):
     """ Print a dictionary of key values aligned by separator
+
+    :param data:
+    :param separator:
+    :param width:
+    :return:
     """
-    for l in kvalign(data, max_width=width):
-        print(separator.join([str(v) for v in l]))
+    print(kvstring(data, separator=separator, width=width))
 
 
 if __name__ == "__main__":
-    logging.basicConfig(level=logging.DEBUG)
     kvprint({'foo': 'bar', 'longer key string': 123}, width=4)
